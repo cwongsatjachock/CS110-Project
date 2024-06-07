@@ -1,6 +1,6 @@
-import express from 'express';
-import {getUserFromToken} from "./UserFunctions.js";
-import Vote from "./models/Vote.js";
+const express = require('express');
+const {getUserFromToken} = require("./UserFunctions.js");
+const Vote = require("./models/Vote.js");
 
 const router = express.Router();
 
@@ -60,4 +60,4 @@ router.post('/votes', (req,res) => {
 
 })
 
-export default router;
+module.exports = router;
