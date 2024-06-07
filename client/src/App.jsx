@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import HomePage from './src/pages/HomePage';
-import ProfilePage from './src/pages/ProfilePage';
-import PostDetailPage from './src/pages/PostDetailPage';
-import LoginPage from './src/pages/LoginPage';
-import SignupPage from './src/pages/SignupPage';
-import AdminPage from './src/pages/AdminPage';
+import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
+import PostDetailPage from './pages/PostDetailPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
