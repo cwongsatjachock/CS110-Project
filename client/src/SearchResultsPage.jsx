@@ -1,13 +1,14 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Post from "./Post";
+import { useParams } from "react-router-dom";
 
-function SearchResultsPage(props) {
-  const {text} = props.match.params;
+function SearchResultsPage() {
+  const { text } = useParams();
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:4000/comments?search=' + text, {withCredentials: true})
+    axios.get('http://localhost:4000/comments?search=' + text, { withCredentials: true })
       .then(response => setComments(response.data));
   }, [text]);
 
