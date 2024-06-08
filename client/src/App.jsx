@@ -1,24 +1,39 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
-import PostDetailPage from './pages/PostDetailPage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import AdminPage from './pages/AdminPage';
+import './App.css';
+import AuthModalContext from "./AuthModalContext.jsx";
+import {useState,useEffect} from "react";
+import axios from 'axios';
+import UserContext from "./UserContext";
+import Routing from "./Routing";
+import PostFormModalContext from "./PostFormModalContext";
+import RedirectContext from "./RedirectContext";
 
 function App() {
+  const [showAuthModal,setShowAuthModal] = useState(false);
+  const [showPostFormModal,setShowPostFormModal] = useState(false);
+  const [user,setUser] = useState({});
+  const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+
+    axios.get('http://localhost:3000/user', {withCredentials:true})
+      .then(response => setUser(response.data));
+
+  }, []);
+  function logout() {
+    axios.post('http://localhost:3000/logout', {}, {withCredentials:true})
+      .then(() => setUser({}));
+  }
+
   return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={HomePage} />
-        <Route path="/profile" component={ProfilePage} />
-        <Route path="/post/:id" component={PostDetailPage} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/signup" component={SignupPage} />
-        <Route path="/admin" component={AdminPage} />
-      </Switch>
-    </Router>
+    <AuthModalContext.Provider value={{show:showAuthModal,setShow:setShowAuthModal}}>
+      <PostFormModalContext.Provider value={{show:showPostFormModal,setShow:setShowPostFormModal}}>
+        <UserContext.Provider value={{...user, logout, setUser}}>
+          <RedirectContext.Provider value={{redirect,setRedirect}}>
+            <Routing />
+          </RedirectContext.Provider>
+        </UserContext.Provider>
+      </PostFormModalContext.Provider>
+    </AuthModalContext.Provider>
   );
 }
 
