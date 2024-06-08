@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
 import TimeAgo from 'timeago-react';
 import Button from "./Button";
 import CommentForm from "./CommentForm";
-import { useState, useContext } from 'react';
+import {useState, useContext} from 'react';
 import RootCommentContext from "./RootCommentContext";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -20,25 +19,20 @@ function Comments(props) {
         return (
           <div key={comment._id} className={'mb-2'}>
             <div className="flex mb-2">
-              <div className="bg-reddit_text w-10 h-10 rounded-full mr-2" />
+              <div className="bg-reddit_text w-10 h-10 rounded-full mr-2"/>
               <div className="leading-10 pr-2 text-lg font-sans">{comment.author}</div>
-              <TimeAgo className="leading-10 text-md font-sans" datetime={comment.postedAt} />
+              <TimeAgo className="leading-10 text-md font-sans" datetime={comment.postedAt}/>
             </div>
-            <div className="border-l-2 border-reddit_text-darker p-3 pb-0" style={{ marginLeft: '18px' }}>
+            <div className="border-l-2 border-reddit_text-darker p-3 pb-0"
+                 style={{marginLeft:'18px'}}>
               <div className="pl-4 -mt-4">
                 <div>
-                  <ReactMarkdown remarkPlugins={[gfm]}>
-                    {comment.body}
-                  </ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[gfm]} children={comment.body} />
                 </div>
                 <Voting commentId={comment._id} />
-                <Button
-                  type={'button'}
-                  onClick={() => setShowForm(comment._id)}
-                  className="bg-reddit_dark-brighter text-reddit_text-darker border-none py-2 pl-0 pr-0"
-                >
-                  Reply
-                </Button>
+                <Button type={'button'}
+                        onClick={() => setShowForm(comment._id)}
+                        className="bg-reddit_dark-brighter text-reddit_text-darker border-none py-2 pl-0 pr-0">Reply</Button>
                 {comment._id === showForm && (
                   <CommentForm
                     parentId={comment._id}
@@ -48,8 +42,7 @@ function Comments(props) {
                       rootCommentInfo.refreshComments();
                     }}
                     showAuthor={false}
-                    onCancel={() => setShowForm(false)}
-                  />
+                    onCancel={e => setShowForm(false)}/>
                 )}
                 {replies.length > 0 && (
                   <Comments comments={props.comments} parentId={comment._id} rootId={props.rootId} />
@@ -62,17 +55,5 @@ function Comments(props) {
     </div>
   );
 }
-
-Comments.propTypes = {
-  comments: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    parentId: PropTypes.string,
-    author: PropTypes.string.isRequired,
-    postedAt: PropTypes.string.isRequired,
-    body: PropTypes.string.isRequired,
-  })).isRequired,
-  parentId: PropTypes.string,
-  rootId: PropTypes.string.isRequired,
-};
 
 export default Comments;
