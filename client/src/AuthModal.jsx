@@ -4,7 +4,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
-import OAuth from "./OAuth"; // Assuming OAuth component represents the Google login button
+import OAuth from "./OAuth"; 
 
 function AuthModal() {
   const [modalType, setModalType] = useState('login');
@@ -80,7 +80,7 @@ function AuthModal() {
           <Input type="password" className="mb-3 w-full" value={password} onChange={e => setPassword(e.target.value)} />
         </label>
 
-        <div className="mb-5:W" />
+        <div className="mb-5" />
 
         {modalType === 'login' && (
           <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={() => login()}>

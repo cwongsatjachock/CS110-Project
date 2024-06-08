@@ -19,7 +19,10 @@ const OAuth = () => {
 
     return (
         <div className="flex justify-center mb-4"> 
-            <Button onClick={handleGoogleClick} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <Button
+                onClick={handleGoogleClick}
+                className="bg-reddit_red text-white font-bold py-2 px-4 rounded"
+            >
                 Sign in with Google
             </Button>
         </div>
