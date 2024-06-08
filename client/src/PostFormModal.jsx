@@ -24,6 +24,7 @@ function PostFormModal () {
     axios.post('http://localhost:4000/comments', data, {withCredentials:true})
       .then(response => {
         setNewPostId(response.data._id);
+        modalContext.setShow(false); 
       })
       .catch(error => {
         console.log(error);

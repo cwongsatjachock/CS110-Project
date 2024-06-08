@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types"; 
 import UserContext from "./UserContext";
 import Textarea from "./Textarea";
 import Button from "./Button";
@@ -9,11 +9,10 @@ function CommentForm(props) {
   const userInfo = useContext(UserContext);
   const [commentBody, setCommentBody] = useState("");
 
-  function postComment(e) {
-    e.preventDefault();
+  function postComment() {
     const data = { body: commentBody, parentId: props.parentId, rootId: props.rootId };
     axios.post('http://localhost:4000/comments', data, { withCredentials: true })
-      .then(response => {
+      .then(() => {
         setCommentBody('');
         if (props.onSubmit) {
           props.onSubmit();
@@ -29,7 +28,7 @@ function CommentForm(props) {
         </div>
       )}
 
-      <form onSubmit={e => postComment(e)}>
+      <form onSubmit={() => postComment()}>
         <Textarea className="w-full mb-3 border border-reddit_border"
           onChange={e => setCommentBody(e.target.value)}
           value={commentBody}
@@ -38,7 +37,7 @@ function CommentForm(props) {
           {!!props.onCancel && (
             <Button outline
               className="p-2 mr-2"
-              onClick={e => props.onCancel()}>Cancel</Button>
+              onClick={props.onCancel}>Cancel</Button>
           )}
           <Button className="p-2">Comment</Button>
         </div>
@@ -47,13 +46,12 @@ function CommentForm(props) {
   );
 }
 
-
 CommentForm.propTypes = {
   rootId: PropTypes.string.isRequired,
   parentId: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func, 
-  onCancel: PropTypes.func, 
-  showAuthor: PropTypes.bool 
+  onSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
+  showAuthor: PropTypes.bool
 };
 
 export default CommentForm;

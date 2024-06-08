@@ -15,7 +15,16 @@ function SearchResultsPage() {
   return (
     <div className="bg-reddit_dark">
       {comments.map(comment => (
-        <Post key={comment._id} {...comment} isListing={true} />
+        <Post 
+          key={comment._id} 
+          open={false} 
+          isListing={true} 
+          _id={comment._id}
+          author={comment.author}
+          postedAt={comment.postedAt}
+          title={comment.title}
+          body={comment.body}
+        />
       ))}
     </div>
   );

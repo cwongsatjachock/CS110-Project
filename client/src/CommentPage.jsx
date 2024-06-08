@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom'; // Import useParams hook
+import { useParams } from 'react-router-dom'; 
 import Comment from './Comment';
 
 function CommentPage() {
-  const { id } = useParams(); // Use useParams hook to access route parameters
+  const { id } = useParams(); 
 
   return (
     <div className="py-4 px-6 bg-reddit_dark">
