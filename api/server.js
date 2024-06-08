@@ -94,12 +94,24 @@ app.post('/logout', (req, res) => {
 app.get('/comments', (req, res) => {
   const search = req.query.search;
   const filters = search
-    ? {body: {$regex: '.*'+search+'.*'}}
-    : {rootId:null};
-  Comment.find(filters).sort({postedAt: -1}).then(comments => {
-    res.json(comments);
-  });
+    ? {
+        $or: [
+          { body: { $regex: '.*' + search + '.*', $options: 'i' } },
+          { title: { $regex: '.*' + search + '.*', $options: 'i' } }
+        ]
+      }
+    : { rootId: null };
+  Comment.find(filters)
+    .sort({ postedAt: -1 })
+    .then(comments => {
+      res.json(comments);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
 });
+
 
 app.get('/comments/root/:rootId', (req, res) => {
   Comment.find({rootId:req.params.rootId}).sort({postedAt: -1}).then(comments => {
