@@ -1,12 +1,11 @@
 import Input from "./Input";
 import Button from "./Button";
-import {useState,useContext} from 'react';
+import {useState,useContext, useEffect, useRef} from 'react';
 import axios from 'axios';
 import AuthModalContext from "./AuthModalContext";
-import onClickOutside from 'react-click-outside';
 import UserContext from "./UserContext";
 
-function AuthModal({handleClickOutside}) {
+function AuthModal() {
   const [modalType,setModalType] = useState('login');
   const [email,setEmail] = useState('');
   const [username,setUsername] = useState('');
@@ -36,15 +35,28 @@ function AuthModal({handleClickOutside}) {
   function login() {
     const data = {username,password};
     axios.post('http://localhost:4000/login', data, {withCredentials:true})
-    .then(() => {
-        modalContext.setShow(false);
-        user.setUser({username})
-    });
+	  .then(() => {
+	    modalContext.setShow(false);
+	    user.setUser({username})
+	  });
   }
+
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        modalContext.setShow(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [modalContext]);
 
   return (
     <div className={"w-screen h-screen fixed top-0 left-0 z-30 flex "+visibleClass} style={{backgroundColor:'rgba(0,0,0,.6)'}}>
-      <div className="border border-reddit_dark-brightest w-3/4 sm:w-1/2 lg:w-1/4 bg-reddit_dark p-5 text-reddit_text self-center mx-auto rounded-md">
+      <div ref={modalRef} className="border border-reddit_dark-brightest w-3/4 sm:w-1/2 lg:w-1/4 bg-reddit_dark p-5 text-reddit_text self-center mx-auto rounded-md">
         {modalType === 'login' && (
           <h1 className="text-2xl mb-5">Login</h1>
         )}
@@ -92,8 +104,4 @@ function AuthModal({handleClickOutside}) {
   );
 }
 
-const clickOutsideConfig = {
-  handleClickOutside: () => AuthModal.prototype.handleClickOutside,
-};
-
-export default onClickOutside(AuthModal, clickOutsideConfig);
+export default AuthModal;

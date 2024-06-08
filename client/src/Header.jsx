@@ -10,9 +10,8 @@ import {
   UserIcon
 } from "@heroicons/react/outline";
 import Avatar from "./avatar.png";
-import onClickOutside from 'react-click-outside';
 import Button from "./Button";
-import {useState,useContext} from 'react';
+import {useState,useContext, useEffect, useRef} from 'react';
 import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
 import {Link} from "react-router-dom";
@@ -36,9 +35,18 @@ function Header() {
   const authModal = useContext(AuthModalContext);
   const user = useContext(UserContext);
 
-  function handleClickOutside() {
-    setUserDropdownVisibilityClass('hidden');
-  }
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setUserDropdownVisibilityClass('hidden');
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="w-full bg-reddit_dark p-2">
@@ -76,50 +84,44 @@ function Header() {
           </div>
         )}
 
-        <div onClickOutside={handleClickOutside}>
-          <button className="rounded-md flex ml-4 border border-gray-700" onClick={() => toggleUserDropdown()}>
-            {!user.username && (
-              <UserIcon className="w-6 h-6 text-gray-400 m-1" />
-            )}
-            {user.username && (
-              <div className="bg-gray-600 rounded-md w-8 h-8">
-                <img src={Avatar} alt="" style={{filter:'invert(100%)'}} className="block" />
-              </div>
-            )}
+        <button className="rounded-md flex ml-4 border border-gray-700" onClick={() => toggleUserDropdown()}>
+          {!user.username && (
+            <UserIcon className="w-6 h-6 text-gray-400 m-1" />
+          )}
+          {user.username && (
+            <div className="bg-gray-600 rounded-md w-8 h-8">
+              <img src={Avatar} alt="" style={{filter:'invert(100%)'}} className="block" />
+            </div>
+          )}
 
-            <ChevronDownIcon className="text-gray-500 w-5 h-5 mt-2 m-1" />
-          </button>
-          <div className={"absolute right-0 top-8 bg-reddit_dark border border-gray-700 z-10 rounded-md text-reddit_text overflow-hidden "+userDropdownVisibilityClass}>
-            {user.username && (
-              <span className="block w-50 py-2 px-3 text-sm">
-                Hello, {user.username}!
-              </span>
-            )}
-            {!user.username && (
-              <button
-                onClick={() => authModal.setShow('login')}
-                className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
-                <LoginIcon className="w-5 h-5 mr-2" />
-                Log In / Sign Up
-              </button>
-            )}
-            {user.username && (
-              <button
-                onClick={() => user.logout()}
-                className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
-                <LogoutIcon className="w-5 h-5 mr-2" />
-                Logout
-              </button>
-            )}
-          </div>
+          <ChevronDownIcon className="text-gray-500 w-5 h-5 mt-2 m-1" />
+        </button>
+        <div ref={dropdownRef} className={"absolute right-0 top-8 bg-reddit_dark border border-gray-700 z-10 rounded-md text-reddit_text overflow-hidden "+userDropdownVisibilityClass}>
+          {user.username && (
+            <span className="block w-50 py-2 px-3 text-sm">
+              Hello, {user.username}!
+            </span>
+          )}
+          {!user.username && (
+            <button
+              onClick={() => authModal.setShow('login')}
+              className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
+              <LoginIcon className="w-5 h-5 mr-2" />
+              Log In / Sign Up
+            </button>
+          )}
+          {user.username && (
+            <button
+              onClick={() => user.logout()}
+              className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
+              <LogoutIcon className="w-5 h-5 mr-2" />
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </header>
   );
 }
 
-const clickOutsideConfig = {
-  handleClickOutside: () => Header.prototype.handleClickOutside,
-};
-
-export default onClickOutside(Header, clickOutsideConfig);
+export default Header;
