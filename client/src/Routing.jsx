@@ -1,6 +1,5 @@
-import React from 'react';
 import Header from "./Header";
-import {BrowserRouter as Router, Routes, Route, useNavigate} from "react-router-dom";
+import {BrowserRouter as Router, useNavigate} from "react-router-dom";
 import RoutingSwitch from "./RoutingSwitch";
 import PostFormModal from "./PostFormModal";
 import AuthModal from "./AuthModal";
