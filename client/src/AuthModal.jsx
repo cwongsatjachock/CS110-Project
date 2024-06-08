@@ -80,7 +80,7 @@ function AuthModal() {
           <Input type="password" className="mb-3 w-full" value={password} onChange={e => setPassword(e.target.value)} />
         </label>
 
-        <div className="mb-5" />
+        <div className="mb-5:W" />
 
         {modalType === 'login' && (
           <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={() => login()}>
