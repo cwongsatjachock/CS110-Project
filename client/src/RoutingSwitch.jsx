@@ -4,6 +4,7 @@ import Board from "./Board";
 import CommentPage from "./CommentPage";
 import CommentModal from "./CommentModal";
 import SearchResultsPage from "./SearchResultsPage";
+import ProfilePage from './ProfilePage';
 
 function RoutingSwitch() {
 
@@ -42,6 +43,7 @@ function RoutingSwitch() {
         <Route path="/" element={<Board />} />
         <Route path="/comments/:id" element={<CommentPage />} />
         <Route path="/search/:text" element={<SearchResultsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </div>
   );
