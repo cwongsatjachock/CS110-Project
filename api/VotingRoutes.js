@@ -1,5 +1,5 @@
 const express = require('express');
-const {getUserFromToken} = require("./UserFunctions.js");
+const { getUserFromToken } = require("./UserFunctions.js");
 const Vote = require("./models/Vote.js");
 
 const router = express.Router();
@@ -8,16 +8,16 @@ router.get('/vote/:commentId/:direction', (req, res) => {
   getUserFromToken(req.cookies.token)
     .then(userInfo => {
 
-      // removing my existing votes
-      Vote.remove({commentId:req.params.commentId,author:userInfo.username})
+      // Removing existing votes
+      Vote.deleteOne({ commentId: req.params.commentId, author: userInfo.username })
         .then(() => {
 
-          if (['up','down'].indexOf(req.params.direction) === -1) {
+          if (['up', 'down'].indexOf(req.params.direction) === -1) {
             res.json(true);
             return;
           }
 
-          // creating my new vote
+          // Creating new vote
           const vote = new Vote({
             author: userInfo.username,
             direction: req.params.direction === 'up' ? 1 : -1,
@@ -31,12 +31,12 @@ router.get('/vote/:commentId/:direction', (req, res) => {
     })
 });
 
-router.post('/votes', (req,res) => {
-  const {commentsIds} = req.body;
+router.post('/votes', (req, res) => {
+  const { commentsIds } = req.body;
 
   getUserFromToken(req.cookies.token).then(userInfo => {
 
-    Vote.find({commentId: {'$in': commentsIds}})
+    Vote.find({ commentId: { '$in': commentsIds } })
       .then(votes => {
         let commentsTotals = {};
         votes.forEach(vote => {
@@ -53,11 +53,11 @@ router.post('/votes', (req,res) => {
           }
         });
 
-        res.json({commentsTotals, userVotes});
+        res.json({ commentsTotals, userVotes });
       });
 
   });
 
-})
+});
 
 module.exports = router;
