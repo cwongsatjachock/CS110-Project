@@ -16,6 +16,7 @@ import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import RedirectContext from "./RedirectContext";
+import OAuth from "./OAuth"; 
 
 function Header() {
   const [userDropdownVisibilityClass, setUserDropdownVisibilityClass] = useState('hidden');
@@ -91,12 +92,15 @@ function Header() {
           </>
         )}
 
-        {!user.username && (
-          <div className="mx-2 hidden sm:block">
-            <Button outline={true} className="mr-1 h-8" onClick={() => authModal.setShow('login')}>Log In</Button>
-            <Button className="h-8" onClick={() => authModal.setShow('register')}>Sign Up</Button>
-          </div>
-        )}
+        <div className="flex space-x-4"> {/* Add space between elements */}
+
+          {!user.username && (
+            <div className="mx-2 hidden sm:block">
+              <Button outline={true} className="mr-1 h-8" onClick={() => authModal.setShow('login')}>Log In</Button>
+              <Button className="h-8" onClick={() => authModal.setShow('register')}>Sign Up</Button>
+            </div>
+          )}
+        </div>
 
         <button className="rounded-md flex ml-4 border border-gray-700" onClick={toggleUserDropdown}>
           {!user.username && (

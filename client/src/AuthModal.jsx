@@ -4,6 +4,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
+import OAuth from "./OAuth"; // Assuming OAuth component represents the Google login button
 
 function AuthModal() {
   const [modalType, setModalType] = useState('login');
@@ -78,27 +79,32 @@ function AuthModal() {
           <span className="text-reddit_text-darker text-sm">Password:</span>
           <Input type="password" className="mb-3 w-full" value={password} onChange={e => setPassword(e.target.value)} />
         </label>
+
+        <div className="mb-5" />
+
         {modalType === 'login' && (
-          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem' }} onClick={() => login()}>
+          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={() => login()}>
             Log In
           </Button>
         )}
         {modalType === 'register' && (
-          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem' }} onClick={e => register(e)}>
+          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={e => register(e)}>
             Sign Up
           </Button>
         )}
-
-        {modalType === 'login' && (
-          <div>
-            New to Reddit? <button className="text-blue-600" onClick={() => modalContext.setShow('register')}>SIGN UP</button>
-          </div>
-        )}
-        {modalType === 'register' && (
-          <div>
-            Already have an account? <button className="text-blue-600" onClick={() => modalContext.setShow('login')}>LOG IN</button>
-          </div>
-        )}
+        <OAuth />
+        <div className="text-center"> 
+          {modalType === 'login' && (
+            <div>
+              New to Reddit? <button className="text-blue-600 px-4 py-2" onClick={() => modalContext.setShow('register')}>Sign Up</button>
+            </div>
+          )}
+          {modalType === 'register' && (
+            <div>
+              Already have an account? <button className="text-blue-600 px-4 py-2" onClick={() => modalContext.setShow('login')}>Log in</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
