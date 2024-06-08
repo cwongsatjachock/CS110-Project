@@ -139,4 +139,45 @@ app.post('/comments', (req, res) => {
     });
 });
 
+app.get('/profile', (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  getUserFromToken(token)
+    .then(user => {
+      res.json({
+        email: user.email,
+        username: user.username,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
+app.put('/profile/username', (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  const { newUsername } = req.body;
+
+  getUserFromToken(token)
+    .then(user => {
+      user.username = newUsername;
+      return user.save();
+    })
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
 app.listen(process.env.PORT);
