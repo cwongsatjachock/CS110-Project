@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types'; // Import PropTypes
-
+import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import PostContent from "./PostContent";
 
 function Post(props) {
-  let postClasses = "block border rounded-md " + (props.open ? "" : "hover:border-reddit_text cursor-pointer");
-  if (props.isListing) {
+  const { open, isListing, rootId, _id, author, postedAt, title, body } = props;
+
+  let postClasses = "block border rounded-md " + (open ? "" : "hover:border-reddit_text cursor-pointer");
+  if (isListing) {
     postClasses += " bg-reddit_dark-brighter p-3 mx-6 border-2 border-reddit_border";
   } else {
     postClasses += " border-none";
@@ -13,14 +14,13 @@ function Post(props) {
 
   return (
     <div className="text-reddit_text pb-4">
-      {props.open && (
+      {open ? (
         <div className={postClasses}>
-          <PostContent {...props} />
+          <PostContent author={author} postedAt={postedAt} title={title} body={body} />
         </div>
-      )}
-      {!props.open && (
-        <Link to={{ pathname: '/comments/' + (props.rootId || props._id), state: { commentId: (props.rootId || props._id) } }} className={postClasses}>
-          <PostContent {...props} />
+      ) : (
+        <Link to={{ pathname: '/comments/' + (rootId || _id), state: { commentId: (rootId || _id) } }} className={postClasses}>
+          <PostContent author={author} postedAt={postedAt} title={title} body={body} />
         </Link>
       )}
     </div>
@@ -30,8 +30,12 @@ function Post(props) {
 Post.propTypes = {
   open: PropTypes.bool.isRequired,
   isListing: PropTypes.bool.isRequired, 
-  rootId: PropTypes.bool.isRequired, 
-  _id: PropTypes.bool.isRequired
+  rootId: PropTypes.string,
+  _id: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  postedAt: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired
 };
 
 export default Post;

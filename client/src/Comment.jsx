@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from 'prop-types';
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm"; // Import remark-gfm plugin
+import gfm from "remark-gfm";
 import Post from "./Post";
 import CommentForm from "./CommentForm";
 import RootCommentContext from "./RootCommentContext";
@@ -48,11 +48,9 @@ function Comment(props) {
 
   return (
     <>
-      {comment && (
-        <Post {...comment} open={true} />
-      )}
-      {!!comment && !!comment._id && (
+      {comment && comment._id && comment.author && comment.postedAt && comment.title && comment.body && (
         <>
+          <Post {...comment} open={true} isListing={true} _id={props.id} />
           <hr className="border-reddit_border my-4" />
           <CommentForm onSubmit={() => refreshComments()}
             rootId={comment._id} parentId={comment._id} showAuthor={true} />
@@ -73,10 +71,14 @@ function Comment(props) {
   );
 }
 
-// Add PropTypes validation
 Comment.propTypes = {
   id: PropTypes.string.isRequired,
-  comment: PropTypes.object, // or any other appropriate type
+  comment: PropTypes.shape({
+    author: PropTypes.string.isRequired,
+    postedAt: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired
+  }),
 };
 
 export default Comment;

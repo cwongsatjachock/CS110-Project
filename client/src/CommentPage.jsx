@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams hook
 import Comment from './Comment';
 

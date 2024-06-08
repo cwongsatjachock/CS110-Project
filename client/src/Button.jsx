@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"; 
+
 function Button({ outline, className, ...rest }) {
   let classNames = "border rounded-full px-3 text-sm font-bold ";
   if (outline) {
@@ -7,5 +9,11 @@ function Button({ outline, className, ...rest }) {
   }
   return <button className={classNames + className} {...rest} />;
 }
+
+
+Button.propTypes = {
+  outline: PropTypes.bool,
+  className: PropTypes.string
+};
 
 export default Button;

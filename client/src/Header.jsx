@@ -79,7 +79,7 @@ function Header() {
 
         {!user.username && (
           <div className="mx-2 hidden sm:block">
-            <Button outline={1} className="mr-1 h-8" onClick={() => authModal.setShow('login')}>Log In</Button>
+            <Button outline={true} className="mr-1 h-8" onClick={() => authModal.setShow('login')}>Log In</Button>
             <Button className="h-8" onClick={() => authModal.setShow('register')}>Sign Up</Button>
           </div>
         )}

@@ -30,7 +30,7 @@ function PostsListing() {
   return (
     <div className="bg-reddit_dark">
       {comments.map(comment => (
-        <Post key={comment._id} {...comment} isListing={true} />
+        <Post key={comment._id} {...comment} isListing={true} open={false} rootId="" />
       ))}
     </div>
   );
