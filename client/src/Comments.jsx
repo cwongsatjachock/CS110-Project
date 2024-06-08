@@ -27,7 +27,10 @@ function Comments(props) {
             <div className="border-l-2 border-reddit_text-darker p-3 pb-0" style={{marginLeft:'18px'}}>
               <div className="pl-4 -mt-4">
                 <div>
-                  <ReactMarkdown remarkPlugins={[gfm]} children={comment.body} />
+                  {/* Render the ReactMarkdown component directly */}
+                  <ReactMarkdown remarkPlugins={[gfm]}>
+                    {comment.body}
+                  </ReactMarkdown>
                 </div>
                 <Voting commentId={comment._id}>
                   {/* Nest Voting component children here */}
@@ -46,7 +49,7 @@ function Comments(props) {
                         rootCommentInfo.refreshComments();
                       }}
                       showAuthor={false}
-                      onCancel={e => setShowForm(false)}
+                      onCancel={() => setShowForm(false)} 
                     />
                   </div>
                 )}
@@ -63,8 +66,6 @@ function Comments(props) {
     </div>
   );
 }
-
-
 
 Comments.propTypes = {
   comments: PropTypes.array.isRequired,

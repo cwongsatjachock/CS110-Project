@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PostContent from "./PostContent";
 
 function Post(props) {
-  const { open, isListing, rootId, _id, author, postedAt, title, body } = props;
+  const { open, isListing, rootId, _id, author, postedAt, title = "Untitled", body } = props;
 
   let postClasses = "block border rounded-md " + (open ? "" : "hover:border-reddit_text cursor-pointer");
   if (isListing) {
@@ -29,12 +29,12 @@ function Post(props) {
 
 Post.propTypes = {
   open: PropTypes.bool.isRequired,
-  isListing: PropTypes.bool.isRequired, 
+  isListing: PropTypes.bool.isRequired,
   rootId: PropTypes.string,
   _id: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   postedAt: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   body: PropTypes.string.isRequired
 };
 
