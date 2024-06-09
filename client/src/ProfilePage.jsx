@@ -52,7 +52,7 @@ function ProfilePage() {
 
   return (
     <div className="flex justify-center items-center h-screen mx-10">
-      <div className="bg-gray-800 p-6 rounded-lg text-white">
+      <div className="bg-gray-800 p-6 rounded-lg text-white mr-6">
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
         <p>Email: {userData.email}</p>
         {editingUsername ? (

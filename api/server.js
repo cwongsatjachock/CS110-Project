@@ -114,7 +114,6 @@ app.get('/comments', (req, res) => {
   const filters = search
     ? {
         $or: [
-          { body: { $regex: '.*' + search + '.*', $options: 'i' } },
           { title: { $regex: '.*' + search + '.*', $options: 'i' } }
         ]
       }
