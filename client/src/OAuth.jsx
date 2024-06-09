@@ -4,6 +4,7 @@ import { app } from './firebase';
 import Button from './Button';
 import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
+import PropTypes from 'prop-types';
 
 const OAuth = ({ setUsername, setEmail }) => {
     const auth = getAuth(app);
@@ -56,5 +57,10 @@ const OAuth = ({ setUsername, setEmail }) => {
         </div>
     )
 }
+
+OAuth.propTypes = {
+    setUsername: PropTypes.func.isRequired,
+    setEmail: PropTypes.func.isRequired,
+};
 
 export default OAuth;
