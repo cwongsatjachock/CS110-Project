@@ -44,7 +44,7 @@ function RoutingSwitch(props) { // Ensure props are passed to RoutingSwitch
         <Route path="/comments/:id" element={<CommentPage />} />
         <Route path="/search/:text" element={<SearchResultsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/profile/:username" element={<UserProfile {...props} />} /> 
+        <Route path="/profile/view/:username" element={<UserProfile />} /> 
       </Routes>
     </div>
   );

@@ -1,57 +1,51 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
+import Post from './Post'; // Import the Post component
+import { useParams } from "react-router-dom";
 
-function UserProfile({ match }) {
+function UserProfile() {
   const [userData, setUserData] = useState(null);
-  const [userPosts, setUserPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState([]); // State to store user's posts
+  const { username } = useParams();
 
   useEffect(() => {
-    if (match && match.params && match.params.username) {
-      const username = match.params.username;
-      // Fetch user profile
-      axios.get(`http://localhost:4000/user/${username}`)
-        .then(response => setUserData(response.data))
-        .catch(error => console.log(error));
-      
-      // Fetch user's posts
-      axios.get(`http://localhost:4000/user/${username}/posts`)
-        .then(response => setUserPosts(response.data))
-        .catch(error => console.log(error));
-    }
-  }, [match]);
+    axios.get('http://localhost:4000/profile/view/' + username, { withCredentials: true })
+      .then(response => {
+        setUserData(response.data);
+        // Fetch user's posts after user data is fetched
+        fetchUserPosts(response.data.username);
+      })
+      .catch(error => console.log(error));
+  }, [username]);
+
+  // Function to fetch user's posts
+  const fetchUserPosts = (username) => {
+    axios.get(`http://localhost:4000/user/${username}/posts`, { withCredentials: true })
+      .then(response => setUserPosts(response.data))
+      .catch(error => console.log(error));
+  };
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <div className='text-white'>Loading...</div>;
   }
 
   return (
-    <div>
-      <h2>User Profile</h2>
-      <p>Username: {userData.username}</p>
-      <p>Email: {userData.email}</p>
-      {/* Render user's posts */}
-      <div>
-        <h3>User's Posts:</h3>
-        <ul>
-          {userPosts.map(post => (
-            <li key={post._id}>
-              <h4>{post.title}</h4>
-              <p>{post.body}</p>
-            </li>
-          ))}
-        </ul>
+    <div className="flex justify-center items-center h-screen">
+      <div className="bg-gray-800 p-6 rounded-lg text-white">
+        <h1 className="text-2xl font-bold mb-4">Profile</h1>
+        <p>Email: {userData.email}</p>
+        <p>Username: {userData.username}</p>
+      </div>
+
+      {/* Display user's posts */}
+      <div className="bg-gray-800 p-6 rounded-lg text-white">
+        <h2 className="text-2xl font-bold mb-4">Posts</h2>
+        {userPosts.map(post => (
+          <Post key={post._id} {...post} open={true} isListing={true} />
+        ))}
       </div>
     </div>
   );
 }
-
-UserProfile.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      username: PropTypes.string.isRequired
-    })
-  })
-};
 
 export default UserProfile;

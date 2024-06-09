@@ -23,7 +23,7 @@ function ProfilePage() {
 
   // Function to fetch user's posts
   const fetchUserPosts = (username) => {
-    axios.get(`http://localhost:4000/comments?author=${username}`)
+    axios.get(`http://localhost:4000/user/${username}/posts`, { withCredentials: true })
       .then(response => setUserPosts(response.data))
       .catch(error => console.log(error));
   };

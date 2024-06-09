@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 function SearchResultsPage() {
   const { text } = useParams();
   const [comments, setComments] = useState([]);
-
+  console.log(text);
   useEffect(() => {
     axios.get('http://localhost:4000/comments?search=' + text, { withCredentials: true })
       .then(response => setComments(response.data));
