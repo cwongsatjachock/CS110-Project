@@ -1,18 +1,32 @@
+// ProfilePage.jsx
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import UserContext from './UserContext';
+import Post from './Post'; // Import the Post component
 
 function ProfilePage() {
   const [userData, setUserData] = useState(null);
   const [editingUsername, setEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState('');
+  const [userPosts, setUserPosts] = useState([]); // State to store user's posts
   const user = useContext(UserContext);
 
   useEffect(() => {
     axios.get('http://localhost:4000/profile', { withCredentials: true })
-      .then(response => setUserData(response.data))
+      .then(response => {
+        setUserData(response.data);
+        // Fetch user's posts after user data is fetched
+        fetchUserPosts(response.data.username);
+      })
       .catch(error => console.log(error));
   }, []);
+
+  // Function to fetch user's posts
+  const fetchUserPosts = (username) => {
+    axios.get(`http://localhost:4000/comments?author=${username}`)
+      .then(response => setUserPosts(response.data))
+      .catch(error => console.log(error));
+  };
 
   const handleEditUsername = () => {
     setEditingUsername(true);
@@ -58,6 +72,14 @@ function ProfilePage() {
             <button className="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md" onClick={handleEditUsername}>Edit Username</button>
           </div>
         )}
+      </div>
+
+      {/* Display user's posts */}
+      <div className="bg-gray-800 p-6 rounded-lg text-white">
+        <h2 className="text-2xl font-bold mb-4">Posts</h2>
+        {userPosts.map(post => (
+          <Post key={post._id} {...post} open={true} isListing={true} />
+        ))}
       </div>
     </div>
   );

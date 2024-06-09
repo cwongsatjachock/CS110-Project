@@ -18,7 +18,6 @@ import UserContext from "./UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import RedirectContext from "./RedirectContext";
 
-
 function Header() {
   const [userDropdownVisibilityClass, setUserDropdownVisibilityClass] = useState('hidden');
   const [searchText, setSearchText] = useState('');

@@ -1,10 +1,9 @@
+// Post.jsx
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import PostContent from "./PostContent";
 
-function Post(props) {
-  const { open, isListing, rootId, _id, author, postedAt, title = "Untitled", body } = props;
-
+function Post({ open, isListing, rootId, _id, author, postedAt, title = "Untitled", body }) {
   let postClasses = "block border rounded-md " + (open ? "" : "hover:border-reddit_text cursor-pointer");
   if (isListing) {
     postClasses += " bg-reddit_dark-brighter p-3 mx-6 border-2 border-reddit_border";

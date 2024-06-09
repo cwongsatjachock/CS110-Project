@@ -130,7 +130,6 @@ app.get('/comments', (req, res) => {
     });
 });
 
-
 app.get('/comments/root/:rootId', (req, res) => {
   Comment.find({rootId:req.params.rootId}).sort({postedAt: -1}).then(comments => {
     res.json(comments);
@@ -210,6 +209,22 @@ app.put('/profile/username', (req, res) => {
     });
 });
 
+
+// New endpoint to fetch user's posts
+app.get('/user/:username/posts', (req, res) => {
+  const username = req.params.username;
+
+  Comment.find({ author: username })
+    .sort({ postedAt: -1 })
+    .then(posts => {
+      res.json(posts);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
 // Route to handle Firebase token authentication
 app.post('/authenticate', authenticateFirebaseToken, async (req, res) => {
   try {
@@ -256,3 +271,4 @@ app.get('/profile', authenticateFirebaseToken, (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
+
