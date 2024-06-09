@@ -209,6 +209,32 @@ app.put('/profile/username', (req, res) => {
     });
 });
 
+// Add this route to your Express server
+app.get('/profile/view/:username', (req, res) => {
+  const username = req.params.username;
+
+  // Here you should fetch the user profile data from your database
+  // For example:
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        // If user is not found, send 404
+        res.status(404).send('User not found');
+        return;
+      }
+      // If user is found, send the user profile data
+      res.json({
+        username: user.username,
+        email: user.email
+        // Add any other profile data you want to send
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
 
 // New endpoint to fetch user's posts
 app.get('/user/:username/posts', (req, res) => {
