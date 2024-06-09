@@ -92,7 +92,7 @@ function AuthModal() {
             Sign Up
           </Button>
         )}
-        <OAuth />
+        <OAuth setUsername={setUsername} setEmail={setEmail} />
         <div className="text-center"> 
           {modalType === 'login' && (
             <div>
