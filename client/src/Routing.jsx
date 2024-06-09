@@ -1,9 +1,9 @@
-import Header from "./Header";
+import { useContext, useEffect } from "react";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import Header from "./Header";
 import RoutingSwitch from "./RoutingSwitch";
 import PostFormModal from "./PostFormModal";
 import AuthModal from "./AuthModal";
-import { useContext, useEffect } from "react";
 import RedirectContext from "./RedirectContext";
 import Footer from "./Footer";
 
@@ -22,7 +22,7 @@ function RoutingContent() {
   useEffect(() => {
     if (redirect) {
       navigate(redirect);
-      setRedirect(false);
+      setRedirect(null);
     }
   }, [redirect, navigate, setRedirect]);
 

@@ -1,13 +1,13 @@
-import { Route, Routes, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Board from "./Board";
 import CommentPage from "./CommentPage";
 import CommentModal from "./CommentModal";
 import SearchResultsPage from "./SearchResultsPage";
 import ProfilePage from './ProfilePage';
-import UserProfile from './UserProfile'; // Import the UserProfile component
+import UserProfile from './UserProfile';
 
-function RoutingSwitch(props) { // Ensure props are passed to RoutingSwitch
+function RoutingSwitch(props) {
   const [postOpen, setPostOpen] = useState(false);
   let location = useLocation();
   let commentId = null;
@@ -44,7 +44,7 @@ function RoutingSwitch(props) { // Ensure props are passed to RoutingSwitch
         <Route path="/comments/:id" element={<CommentPage />} />
         <Route path="/search/:text" element={<SearchResultsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/profile/:username" element={<UserProfile {...props} />} /> 
+        <Route path="/profile/:username" element={<UserProfile {...props} />} />
       </Routes>
     </div>
   );

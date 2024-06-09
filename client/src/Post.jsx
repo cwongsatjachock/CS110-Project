@@ -1,4 +1,5 @@
 // Post.jsx
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import PostContent from "./PostContent";
@@ -11,15 +12,21 @@ function Post({ open, isListing, rootId, _id, author, postedAt, title = "Untitle
     postClasses += " border-none";
   }
 
+  const postContent = (
+    <PostContent author={author} postedAt={postedAt} title={title} body={body} />
+  );
+
   return (
     <div className="text-reddit_text pb-4">
       {open ? (
         <div className={postClasses}>
-          <PostContent author={author} postedAt={postedAt} title={title} body={body} />
+          {postContent}
         </div>
       ) : (
         <Link to={{ pathname: '/comments/' + (rootId || _id), state: { commentId: (rootId || _id) } }} className={postClasses}>
-          <PostContent author={author} postedAt={postedAt} title={title} body={body} />
+          <div>
+            {React.cloneElement(postContent, { disableLink: true })}
+          </div>
         </Link>
       )}
     </div>
