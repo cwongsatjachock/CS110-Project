@@ -1,31 +1,27 @@
 import axios from 'axios';
-import {useContext} from "react";
+import { useContext } from "react";
+import PropTypes from 'prop-types'; // Import PropTypes
 import RootCommentContext from "./RootCommentContext";
 
 function Voting(props) {
-
   const rootCommentInfo = useContext(RootCommentContext);
-  const {commentsTotals, userVotes} = rootCommentInfo;
-  const {commentId} = props;
+  const { commentsTotals, userVotes } = rootCommentInfo;
+  const { commentId } = props;
 
-  const total = commentsTotals && commentId in commentsTotals
-    ? commentsTotals[commentId]
-    : 0;
+  const total = commentsTotals && commentId in commentsTotals ? commentsTotals[commentId] : 0;
 
-  const userVote = userVotes && commentId in userVotes
-    ? userVotes[commentId]
-    : 0;
+  const userVote = userVotes && commentId in userVotes ? userVotes[commentId] : 0;
 
   function sendVote(direction = 'up') {
     const directionNumber = direction === 'up' ? 1 : -1;
     if (directionNumber === userVote) {
       direction = 'unvote';
     }
-    const url = 'http://localhost:4000/vote/'+props.commentId+'/'+direction;
-    axios.get(url, {withCredentials:true})
+    const url = 'http://localhost:4000/vote/' + props.commentId + '/' + direction;
+    axios.get(url, { withCredentials: true })
       .then(() => {
         rootCommentInfo.refreshVotes();
-      })
+      });
   }
 
   function handleVoteUp() {
@@ -49,9 +45,9 @@ function Voting(props) {
     if (directionName === 'up') {
       return (
         <button onClick={() => handleVoteUp()} className={classNames}>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-        </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          </svg>
         </button>
       );
     } else {
@@ -73,5 +69,10 @@ function Voting(props) {
     </div>
   );
 }
+
+// Prop types validation
+Voting.propTypes = {
+  commentId: PropTypes.any.isRequired, // Validate commentId prop
+};
 
 export default Voting;

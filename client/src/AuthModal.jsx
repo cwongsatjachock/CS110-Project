@@ -1,16 +1,16 @@
 import Input from "./Input";
 import Button from "./Button";
-import {useState,useContext} from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AuthModalContext from "./AuthModalContext";
-import onClickOutside from 'react-click-outside';
 import UserContext from "./UserContext";
+import OAuth from "./OAuth"; 
 
-function AuthModal({handleClickOutside}) {
-  const [modalType,setModalType] = useState('login');
-  const [email,setEmail] = useState('');
-  const [username,setUsername] = useState('');
-  const [password,setPassword] = useState('');
+function AuthModal() {
+  const [modalType, setModalType] = useState('login');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const modalContext = useContext(AuthModalContext);
   const user = useContext(UserContext);
@@ -22,10 +22,10 @@ function AuthModal({handleClickOutside}) {
 
   function register(e) {
     e.preventDefault();
-    const data = {email,username,password};
-    axios.post('http://localhost:4000/register', data, {withCredentials:true})
+    const data = { email, username, password };
+    axios.post('http://localhost:4000/register', data, { withCredentials: true })
       .then(() => {
-        user.setUser({username});
+        user.setUser({ username });
         modalContext.setShow(false);
         setEmail('');
         setPassword('');
@@ -34,17 +34,30 @@ function AuthModal({handleClickOutside}) {
   }
 
   function login() {
-    const data = {username,password};
-    axios.post('http://localhost:4000/login', data, {withCredentials:true})
-    .then(() => {
+    const data = { username, password };
+    axios.post('http://localhost:4000/login', data, { withCredentials: true })
+      .then(() => {
         modalContext.setShow(false);
-        user.setUser({username})
-    });
+        user.setUser({ username });
+      });
   }
 
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        modalContext.setShow(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [modalContext]);
+
   return (
-    <div className={"w-screen h-screen fixed top-0 left-0 z-30 flex "+visibleClass} style={{backgroundColor:'rgba(0,0,0,.6)'}}>
-      <div className="border border-reddit_dark-brightest w-3/4 sm:w-1/2 lg:w-1/4 bg-reddit_dark p-5 text-reddit_text self-center mx-auto rounded-md">
+    <div className={"w-screen h-screen fixed top-0 left-0 z-30 flex " + visibleClass} style={{ backgroundColor: 'rgba(0,0,0,.6)' }}>
+      <div ref={modalRef} className="border border-reddit_dark-brightest w-3/4 sm:w-1/2 lg:w-1/4 bg-reddit_dark p-5 text-reddit_text self-center mx-auto rounded-md">
         {modalType === 'login' && (
           <h1 className="text-2xl mb-5">Login</h1>
         )}
@@ -66,34 +79,35 @@ function AuthModal({handleClickOutside}) {
           <span className="text-reddit_text-darker text-sm">Password:</span>
           <Input type="password" className="mb-3 w-full" value={password} onChange={e => setPassword(e.target.value)} />
         </label>
+
+        <div className="mb-5" />
+
         {modalType === 'login' && (
-          <Button className="w-full py-2 mb-3" style={{borderRadius:'.3rem'}} onClick={()=>login()}>
+          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={() => login()}>
             Log In
           </Button>
         )}
         {modalType === 'register' && (
-          <Button className="w-full py-2 mb-3" style={{borderRadius:'.3rem'}} onClick={e => register(e)}>
+          <Button className="w-full py-2 mb-3" style={{ borderRadius: '.3rem', padding: '0.5rem' }} onClick={e => register(e)}>
             Sign Up
           </Button>
         )}
-
-        {modalType === 'login' && (
-          <div>
-            New to Reddit? <button className="text-blue-600" onClick={() => modalContext.setShow('register')}>SIGN UP</button>
-          </div>
-        )}
-        {modalType === 'register' && (
-          <div>
-            Already have an account? <button className="text-blue-600" onClick={() => modalContext.setShow('login')}>LOG IN</button>
-          </div>
-        )}
+        <OAuth setUsername={setUsername} setEmail={setEmail} />
+        <div className="text-center"> 
+          {modalType === 'login' && (
+            <div>
+              New to Reddit? <button className="text-blue-600 px-4 py-2" onClick={() => modalContext.setShow('register')}>Sign Up</button>
+            </div>
+          )}
+          {modalType === 'register' && (
+            <div>
+              Already have an account? <button className="text-blue-600 px-4 py-2" onClick={() => modalContext.setShow('login')}>Log in</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-const clickOutsideConfig = {
-  handleClickOutside: () => AuthModal.prototype.handleClickOutside,
-};
-
-export default onClickOutside(AuthModal, clickOutsideConfig);
+export default AuthModal;
