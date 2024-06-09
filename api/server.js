@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const User = require("./models/User.js");
 const Comment = require("./models/Comment.js");
 const VotingRoutes = require("./VotingRoutes.js");
+const admin = require('./firebaseAdmin');
 
 const app = express();
 app.use(cookieParser());
@@ -29,8 +30,25 @@ function getUserFromToken(token) {
 mongoose.connect(process.env.MONGO_URI, {useNewUrlParser:true,useUnifiedTopology:true,}).then(() => {
   const db = mongoose.connection;
   db.on('error', console.log);
-  console.log(`Server Running on Port: http://localhost:${process.env.PORT}`);
 });
+
+const authenticateFirebaseToken = async (req, res, next) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(403).send('Unauthorized');
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken; // Attach user data to request object
+    //console.log(req.user);
+    next();
+  } catch (error) {
+    console.error('Error verifying Firebase ID token:', error);
+    res.status(403).send('Unauthorized');
+  }
+};
 
 app.get('/', (req, res) => {
   res.send('ok');
@@ -191,6 +209,7 @@ app.put('/profile/username', (req, res) => {
     });
 });
 
+
 // New endpoint to fetch user's posts
 app.get('/user/:username/posts', (req, res) => {
   const username = req.params.username;
@@ -206,4 +225,50 @@ app.get('/user/:username/posts', (req, res) => {
     });
 });
 
-app.listen(process.env.PORT);
+// Route to handle Firebase token authentication
+app.post('/authenticate', authenticateFirebaseToken, async (req, res) => {
+  try {
+    //console.log(req.user);
+    const { name, uid, email } = req.user;
+    console.log({ name, uid, email });
+    
+    // Check if the user already exists in the database
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      // User exists, authenticate the user
+      const passOk = bcrypt.compareSync(uid, existingUser.password); // Assuming UID is stored as password
+      if (passOk) {
+        const token = jwt.sign({ id: existingUser._id }, process.env.SECRET);
+        res.cookie('token', token).send();
+      } else {
+        res.status(422).json('Invalid username or password');
+      }
+    } else {
+      // User doesn't exist, create a new user
+      const password = bcrypt.hashSync(uid, 10); // Hash UID as password
+      const username = name;
+      
+      const newUser = new User({ email, username, password });
+      await newUser.save();
+
+      const token = jwt.sign({ id: newUser._id }, process.env.SECRET);
+      res.cookie('token', token).send();
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/profile', authenticateFirebaseToken, (req, res) => {
+  res.json({
+    email: req.user.email,
+    username: req.user.name, // Assuming the user object has a name field
+  });
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
+
