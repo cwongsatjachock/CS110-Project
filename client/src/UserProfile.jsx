@@ -30,7 +30,7 @@ function UserProfile() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen mx-10">
       <div className="bg-gray-800 p-6 rounded-lg text-white">
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
         <p>Email: {userData.email}</p>
@@ -38,7 +38,7 @@ function UserProfile() {
       </div>
 
       {/* Display user's posts */}
-      <div className="bg-gray-800 p-6 rounded-lg text-white">
+      <div className="bg-gray-800 p-6 rounded-lg text-white h-screen overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">Posts</h2>
         {userPosts.map(post => (
           <Post key={post._id} {...post} open={true} isListing={true} />
