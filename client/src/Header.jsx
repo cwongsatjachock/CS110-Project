@@ -17,7 +17,6 @@ import AuthModalContext from "./AuthModalContext";
 import UserContext from "./UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import RedirectContext from "./RedirectContext";
-import OAuth from "./OAuth"; 
 
 function Header() {
   const [userDropdownVisibilityClass, setUserDropdownVisibilityClass] = useState('hidden');

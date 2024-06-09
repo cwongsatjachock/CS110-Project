@@ -112,7 +112,6 @@ app.get('/comments', (req, res) => {
     });
 });
 
-
 app.get('/comments/root/:rootId', (req, res) => {
   Comment.find({rootId:req.params.rootId}).sort({postedAt: -1}).then(comments => {
     res.json(comments);
@@ -185,6 +184,21 @@ app.put('/profile/username', (req, res) => {
     })
     .then(() => {
       res.sendStatus(200);
+    })
+    .catch(err => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+});
+
+// New endpoint to fetch user's posts
+app.get('/user/:username/posts', (req, res) => {
+  const username = req.params.username;
+
+  Comment.find({ author: username })
+    .sort({ postedAt: -1 })
+    .then(posts => {
+      res.json(posts);
     })
     .catch(err => {
       console.log(err);
