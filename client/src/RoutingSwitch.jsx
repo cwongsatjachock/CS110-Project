@@ -7,7 +7,7 @@ import SearchResultsPage from "./SearchResultsPage";
 import ProfilePage from './ProfilePage';
 import UserProfile from './UserProfile';
 
-function RoutingSwitch(props) {
+function RoutingSwitch() {
   const [postOpen, setPostOpen] = useState(false);
   let location = useLocation();
   let commentId = null;
