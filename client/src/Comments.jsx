@@ -7,11 +7,19 @@ import RootCommentContext from "./RootCommentContext";
 import Voting from "./Voting";
 import Button from "./Button";
 import CommentForm from "./CommentForm";
+import { Link } from 'react-router-dom';
+import RedirectContext from "./RedirectContext";
 
 function Comments(props) {
   const [showForm, setShowForm] = useState(false);
   const comments = props.comments.filter(comment => props.parentId === comment.parentId);
   const rootCommentInfo = useContext(RootCommentContext);
+  const { setRedirect } = useContext(RedirectContext);
+
+  function doClickProfile(author) {
+    console.log(author);
+    setRedirect('/profile/view/' + encodeURIComponent(author));
+  }
 
   return (
     <div className={'my-2 text-reddit_text'}>
@@ -21,7 +29,11 @@ function Comments(props) {
           <div key={comment._id} className={'mb-2'}>
             <div className="flex mb-2">
               <div className="bg-reddit_text w-10 h-10 rounded-full mr-2"/>
-              <div className="leading-10 pr-2 text-lg font-sans">{comment.author}</div>
+              <div className="leading-10 pr-2 text-lg font-sans">
+                <Link onClick={() => doClickProfile(comment.author)} className="text-blue-500 hover:underline">
+                  u/{comment.author}
+                </Link>
+              </div>
               <TimeAgo className="leading-10 text-md font-sans" datetime={comment.postedAt}/>
             </div>
             <div className="border-l-2 border-reddit_text-darker p-3 pb-0" style={{marginLeft:'18px'}}>
