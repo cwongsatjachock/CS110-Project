@@ -19,7 +19,6 @@ function Header() {
   const user = useContext(UserContext);
   const dropdownRef = useRef(null);
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -110,12 +109,10 @@ function Header() {
                 <LogoutIcon className="w-5 h-5 mr-2" />
                 Logout
               </button>
-              <button
-                onClick={() => navigate('/profile')}
-                className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
+              <Link to="/profile" className="block flex w-50 py-2 px-3 hover:bg-gray-300 hover:text-black text-sm">
                 <CogIcon className="w-5 h-5 mr-2" />
                 Profile
-              </button>
+              </Link>
             </div>
           )}
         </div>
